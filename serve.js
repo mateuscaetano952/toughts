@@ -8,6 +8,10 @@ const session = require('express-session');
 const FileStore = require('session-file-store')(session);
 const flash = require('connect-flash');
 
+//Models
+const Tought = require('./src/models/Tought');
+const User = require('./src/models/User');
+
 //handlebars setup
 const { engine } = require('express-handlebars');
 
@@ -56,6 +60,7 @@ app.use('/', routes);
 //server connection
 const PORT = process.env.PORT || 3000;
 conn
+//.sync({force: true})
 .sync()
 .then(() => {
     app.listen(PORT, () => {
