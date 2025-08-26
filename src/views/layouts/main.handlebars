@@ -14,12 +14,15 @@
         </a>
         <ul>
             <li><a href="/">Pensamentos</a></li>
-            <li><a href="/login"></a>Entrar</li>
-            <li><a href="/register"></a>Registrar</li>
+            <li><a href="/login">Entrar</a></li>
+            <li><a href="/register">Registrar</a></li>
         </ul>
     </nav>
     <div class="container">
-         {{{body}}}
+        {{#if message}}
+            <h2>{{message}}</h2>
+        {{/if}}
+        {{{body}}}
     </div>
     <footer>
         <p><span>Toughts</span> &copy; 2025</p>

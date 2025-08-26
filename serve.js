@@ -22,6 +22,9 @@ app.set('views', path.join(__dirname, 'src', 'views'));
 //static files
 app.use(express.static(path.join(__dirname, 'public')));
 
+//Flash messages middleware
+app.use(flash());
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -41,8 +44,7 @@ app.use(session({
   }
 }));
 
-//Flash messages middleware
-app.use(flash());
+
 
 //Set session to res
 app.use((req, res, next) => {
