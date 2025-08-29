@@ -10,6 +10,7 @@ router.get('/', toughtsController.showToughts);
 router.get('/register', authController.register);
 router.post('/register', authController.registerPost);
 router.get('/login', authController.login);
-//router.post('/login', authController.loginPost);
+router.post('/login', authController.loginPost);
+router.get('/logout', authController.logout);
 
 module.exports = router;

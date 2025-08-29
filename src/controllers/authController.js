@@ -48,19 +48,48 @@ module.exports.registerPost =  async (req, res) => {
     };
 
    try {
-     await User.create(user);
+     const createdUser = await User.create(user);
+      req.flash('message', 'Registration successful');
+
+    //Session start
+    req.session.userid = createdUser.id;
+
+    req.session.save(() => {
+        return res.redirect('/');
+    });
+
    } catch (err) {
        console.error('Failed to create user:', err);
        req.flash('message', 'Internal server error');
        return res.redirect('/register');
    }
 
-    req.flash('message', 'Registration successful');
-
-    //Session start
-    req.session.userid = user.id;
-
-    req.session.save(() => {
-        return res.redirect('/');
-    })
+  
 };
+
+module.exports.loginPost = async (req, res) => {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ where: { email: email }});
+    if (!user) {
+        req.flash('message', 'Invalid email or password');
+        return res.redirect('/login');
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+        req.flash('message', 'Invalid email or password');
+        return res.redirect('/login');
+    }
+
+    req.session.userid = user.id;
+    req.session.save(() => {
+        res.redirect('/');
+    });
+}
+
+module.exports.logout = (req, res) => {
+    req.session.destroy(() => {
+        res.redirect('/login');
+    }); 
+}
