@@ -1,3 +1,5 @@
+const User = require('../models/User');
+
 module.exports.register = (req, res) => {
     console.log("Debug++ register");
     res.render('auth/register')
@@ -8,7 +10,7 @@ module.exports.login = (req, res) => {
     res.render('auth/login')
 };
 
-module.exports.registerPost = (req, res) => {
+module.exports.registerPost =  async (req, res) => {
     const { name, email, password, confirmPassword } = req.body;
     console.log("Debug++" + name, email, password, confirmPassword);
 
@@ -23,8 +25,30 @@ module.exports.registerPost = (req, res) => {
         return res.render('auth/register', { message: req.flash('message') });
     }
 
-    // If validation passes, proceed with registration logic
-    // ...
+
+    if(password.length < 6) {
+        req.flash('message', 'Password must be at least 6 characters');
+        return res.render('auth/register', { message: req.flash('message') });
+    }
+
+    if(await User.findOne({ where: { email: email } })) {
+        req.flash('message', 'Email already registered');
+        return res.render('auth/register', { message: req.flash('message') });
+    }
+
+    const user = {
+        name,
+        email,
+        password
+    };
+
+   try {
+     await User.create(user);
+   } catch (err) {
+       console.error('Failed to create user:', err);
+       req.flash('message', 'Internal server error');
+       return res.render('auth/register', { message: req.flash('message') });
+   }
 
     req.flash('message', 'Registration successful');
    res.redirect('/login');
