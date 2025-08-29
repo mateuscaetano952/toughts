@@ -53,6 +53,8 @@ app.use((req, res, next) => {
     res.locals.session = req.session;
   }
 
+   res.locals.messages = req.flash();
+
   next();
 });
 
